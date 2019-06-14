@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
@@ -19,7 +20,7 @@ public class Model {
 	
 	ExtFlightDelaysDAO dao;
 	List<String> states;
-	SimpleDirectedWeightedGraph<String, DefaultWeightedEdge> grafo;
+	DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> grafo;
 	List<Adiacenza> edges;
 	HashMap<String, Integer> idMap;
 	
@@ -33,7 +34,7 @@ public class Model {
 
 	public void creaGrafo() {
 		// TODO Auto-generated method stub
-		grafo = new SimpleDirectedWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+		grafo = new DefaultDirectedWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
 		
 		Graphs.addAllVertices(grafo, states);
 		
@@ -91,11 +92,13 @@ public class Model {
 
 	public void simula(int parseInt, String value, int parseInt2) {
 		// TODO Auto-generated method stub
-		Simulatore simulatore = new Simulatore(parseInt, value, parseInt2, this.grafo);
+		Simulatore simulatore = new Simulatore(parseInt, value, parseInt2, this.grafo,this.idMap);
 		
 		simulatore.init();
 		
 		simulatore.run();
+		
+		this.idMap = simulatore.getMap();
 		
 	}
 

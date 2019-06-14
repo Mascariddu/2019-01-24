@@ -1,6 +1,6 @@
 package it.polito.tdp.extflightdelays.model;
 
-public class Evento{
+public class Evento implements Comparable<Evento>{
 
 	public enum Tipo{
 		PARTENZA,
@@ -9,11 +9,13 @@ public class Evento{
 	
 	String stato;
 	Tipo tipo;
+	int giorno;
 	
-	public Evento(String stato, Tipo tipo) {
+	public Evento(String stato, Tipo tipo,int giorno) {
 		super();
 		this.stato = stato;
 		this.tipo = tipo;
+		this.giorno = giorno;
 	}
 	public String getStato() {
 		return stato;
@@ -26,5 +28,18 @@ public class Evento{
 	}
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
+	}
+	
+	@Override
+	public int compareTo(Evento arg0) {
+		// TODO Auto-generated method stub
+		return giorno - arg0.getGiorno();
+	}
+	
+	public int getGiorno() {
+		return giorno;
+	}
+	public void setGiorno(int giorno) {
+		this.giorno = giorno;
 	}
 }

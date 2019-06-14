@@ -91,7 +91,7 @@ public class ExtFlightDelaysDAO {
 	}
 	
 	public List<Adiacenza> loadArchi() {
-		String sql = "SELECT COUNT(DISTINCT f.TAIL_NUMBER) as tot,a1.STATE as a1,a2.STATE as a2 FROM flights f, airports a1, airports a2 WHERE a1.STATE <> a2.STATE AND a1.ID = f.ORIGIN_AIRPORT_ID AND a2.ID = f.DESTINATION_AIRPORT_ID GROUP BY a1.STATE,a2.STATE";
+		String sql = "SELECT COUNT(DISTINCT f.TAIL_NUMBER) as tot,a1.STATE as a1,a2.STATE as a2 FROM flights f, airports a1, airports a2 WHERE a1.ID = f.ORIGIN_AIRPORT_ID AND a2.ID = f.DESTINATION_AIRPORT_ID GROUP BY a1.STATE,a2.STATE";
 		List<Adiacenza> result = new LinkedList<Adiacenza>();
 
 		try {

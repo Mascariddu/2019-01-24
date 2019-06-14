@@ -61,7 +61,7 @@ public class ExtFlightDelaysController {
     	try {
     	model.simula(Integer.parseInt(this.txtT.getText()),this.cmbBoxStati.getValue(), Integer.parseInt(this.txtG.getText()));
     	for (String string : model.getMap().keySet()) {
-    		txtResult.appendText(string+" con "+model.getMap().get(string)+" turisti");
+    		txtResult.appendText(string+" con "+model.getMap().get(string)+" turisti \n");
     	}
     	}catch (NumberFormatException e) {
 			// TODO: handle exception
