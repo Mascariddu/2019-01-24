@@ -5,16 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import it.polito.tdp.extflightdelays.model.Adiacenza;
 import it.polito.tdp.extflightdelays.model.Airline;
 import it.polito.tdp.extflightdelays.model.Airport;
 import it.polito.tdp.extflightdelays.model.Flight;
 
 public class ExtFlightDelaysDAO {
 
-	public List<String> loadAllStates(){
+	public List<String> loadAllStates(HashMap<String, Integer> idMap){
 		String sql = "SELECT distinct(STATE) from airports";
 		List<String> result = new ArrayList<String>();
 
@@ -25,6 +27,7 @@ public class ExtFlightDelaysDAO {
 
 			while (rs.next()) {
 				result.add(rs.getString("STATE"));
+				idMap.put(rs.getString("STATE"), 0);
 			}
 
 			conn.close();
@@ -60,7 +63,7 @@ public class ExtFlightDelaysDAO {
 		}
 	}
 
-	public List<Airport> loadAllAirports() {
+	public List<Airport> loadAllAirports(HashMap<Integer, Airport> airports) {
 		String sql = "SELECT * FROM airports";
 		List<Airport> result = new ArrayList<Airport>();
 
@@ -74,6 +77,7 @@ public class ExtFlightDelaysDAO {
 						rs.getString("CITY"), rs.getString("STATE"), rs.getString("COUNTRY"), rs.getDouble("LATITUDE"),
 						rs.getDouble("LONGITUDE"), rs.getDouble("TIMEZONE_OFFSET"));
 				result.add(airport);
+				airports.put(rs.getInt("ID"), airport);
 			}
 
 			conn.close();
@@ -86,6 +90,29 @@ public class ExtFlightDelaysDAO {
 		}
 	}
 	
+	public List<Adiacenza> loadArchi() {
+		String sql = "SELECT COUNT(DISTINCT f.TAIL_NUMBER) as tot,a1.STATE as a1,a2.STATE as a2 FROM flights f, airports a1, airports a2 WHERE a1.STATE <> a2.STATE AND a1.ID = f.ORIGIN_AIRPORT_ID AND a2.ID = f.DESTINATION_AIRPORT_ID GROUP BY a1.STATE,a2.STATE";
+		List<Adiacenza> result = new LinkedList<Adiacenza>();
+
+		try {
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				Adiacenza adiacenza = new Adiacenza(rs.getString("a1"), rs.getString("a2"), rs.getInt("tot"));
+				result.add(adiacenza);
+			}
+
+			conn.close();
+			return result;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+	}
 
 	public List<Flight> loadAllFlights() {
 		String sql = "SELECT * FROM flights";

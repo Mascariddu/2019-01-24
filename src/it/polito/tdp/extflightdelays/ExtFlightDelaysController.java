@@ -48,15 +48,33 @@ public class ExtFlightDelaysController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
 
+    	model.creaGrafo();
+    	this.cmbBoxStati.getItems().addAll(model.getStates());
+ 
     }
 
     @FXML
     void doSimula(ActionEvent event) {
 
+    	txtResult.clear();
+    	
+    	try {
+    	model.simula(Integer.parseInt(this.txtT.getText()),this.cmbBoxStati.getValue(), Integer.parseInt(this.txtG.getText()));
+    	for (String string : model.getMap().keySet()) {
+    		txtResult.appendText(string+" con "+model.getMap().get(string)+" turisti");
+    	}
+    	}catch (NumberFormatException e) {
+			// TODO: handle exception
+    		e.printStackTrace();
+		}
     }
 
     @FXML
     void doVisualizzaVelivoli(ActionEvent event) {
+    	
+    	txtResult.clear();
+    		
+    	txtResult.appendText(model.getResult(this.cmbBoxStati.getValue()));
 
     }
     
